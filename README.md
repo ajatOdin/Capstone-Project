@@ -44,10 +44,4 @@ Following that I will create the DDPG agent and begin training the agent. I anti
 
 Finally, once the agent is trained, I will conduct the playtest comparing the agents in performance, finishing with the human agent cooperative tests. This will be considered the formal end to this proposal. I further intend to submit this pair of training scenarios, with the accompanying benchmarks to the UnrealCV Model Zoo, whereby they may be used for further development by other machine learning engineers. 
 
-**Before submitting your proposal, ask yourself. . .**
 
-- Does the proposal you have written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Solution Statement** and **Project Design**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your proposal?
-- Have you properly proofread your proposal to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
