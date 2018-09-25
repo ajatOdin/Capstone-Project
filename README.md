@@ -26,17 +26,18 @@ The datasets presented are two levels created by the author in the Unreal Engine
 ### Solution Statement
 _(approx. 1 paragraph)_
 
-In this section, clearly describe a solution to the problem. The solution should be applicable to the project domain and appropriate for the dataset(s) or input(s) given. Additionally, describe the solution thoroughly such that it is clear that the solution is quantifiable (the solution can be expressed in mathematical or logical terms) , measurable (the solution can be measured by some metric and clearly observed), and replicable (the solution can be reproduced and occurs more than once).
+I propose to develop an agent using CV and DDPG in order to interact credibly with the simulated environment. This agent will play in a simple, 1 versus 1 arena style shooter environment with a series of four opponents, a scripted AI, a Q-Learning agent developed inside the system environment (outlined by this paper: https://jewlscholar.mtsu.edu/bitstream/handle/mtsu/5247/BOYD%20%28Reece%29%20Final%20Thesis.pdf?sequence=1&isAllowed=y) as our benchmark model, a duplicate agent of itself, and finally, a human player. Following this test, and with development to ensure we have the most efficient agent given by this model, we will then compare the agent with the saved state and action spaces from the DDPG model to an agent with the same state and action spaces, but upgrade reward mechanisms. The final goal to this end will be an agent that is trained to play alongside a human controlled agent, and represents a credible improvement over a scripted AI agent. 
+
 
 ### Benchmark Model
 _(approximately 1-2 paragraphs)_
 
-In this section, provide the details for a benchmark model or result that relates to the domain, problem statement, and intended solution. Ideally, the benchmark model or result contextualizes existing methods or known information in the domain and problem given, which could then be objectively compared to the solution. Describe how the benchmark model or result is measurable (can be measured by some metric and clearly observed) with thorough detail.
+The benchmark with which we will be comparing our agent is the Q-Learning model created by Reece Boyd (see link above), which had reasonable performance for a Q-Learning agent given the short training periods, but was still subpar as compared to the scripted AI agent. This test will be considered a success if our agent can consistently outperform either the Q-Learning agent or the scripted agent, and represents an advantage when used as a teammate to a human player as compared to the Q-Learning agent and the scripted agent. 
 
 ### Evaluation Metrics
 _(approx. 1-2 paragraphs)_
 
-In this section, propose at least one evaluation metric that can be used to quantify the performance of both the benchmark model and the solution model. The evaluation metric(s) you propose should be appropriate given the context of the data, the problem statement, and the intended solution. Describe how the evaluation metric(s) are derived and provide an example of their mathematical representations (if applicable). Complex evaluation metrics should be clearly defined and quantifiable (can be expressed in mathematical or logical terms).
+The main metric used for this will be the "kill to death" ratio, a common metric utilized in online games. This is most demonstrated by the 1 versus 1 scenario. During the final team event, the metrics will expand to include, "friendly-fire kills", overall team performance, as well as a subjective rating system by which the human players that interact with each of the AI agents will rate them in terms of utility, with 4 being the highest rated partner, and 1 being the lowest rated partner. These results will be averaged between as many human players as we can reasonably gather for this play test and presented in order. 
 
 ### Project Design
 _(approx. 1 page)_
