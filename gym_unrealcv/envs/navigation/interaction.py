@@ -24,11 +24,15 @@ class Navigation(UnrealCv):
         self.use_gym_10_api = distutils.version.LooseVersion(gym.__version__) >= distutils.version.LooseVersion('0.10.0')
 
     def get_observation(self, cam_id, observation_type, mode='direct'):
-        if observation_type == 'Color':
-            self.img_color = state = self.read_image(cam_id, 'lit', mode)
-        elif observation_type == 'Depth':
-            self.img_depth = state = self.read_depth(cam_id)
-        elif observation_type == 'Rgbd':
+        print('Obvs : ', observation_type)
+        state = ''
+        if observation_type == 'color':
+            self.img_color = self.read_image(cam_id, 'lit', mode)
+            state = self.read_image(cam_id, 'lit', mode)
+        elif observation_type == 'depth':
+            self.img_depth = self.read_depth(cam_id)
+            state = self.read_depth(cam_id)
+        elif observation_type == 'rgbd':
             self.img_color = self.read_image(cam_id, 'lit', mode)
             self.img_depth = self.read_depth(cam_id)
             state = np.append(self.img_color, self.img_depth, axis=2)
@@ -36,19 +40,20 @@ class Navigation(UnrealCv):
 
     def define_observation(self, cam_id, observation_type, mode='direct'):
         state = self.get_observation(cam_id, observation_type, mode)
-        if observation_type == 'Color':
+        observation_space = ''
+        if observation_type == 'color':
             if self.use_gym_10_api:
                 observation_space = spaces.Box(low=0, high=255, shape=state.shape, dtype=np.uint8)  # for gym>=0.10
             else:
                 observation_space = spaces.Box(low=0, high=255, shape=state.shape)
 
-        elif observation_type == 'Depth':
+        elif observation_type == 'depth':
             if self.use_gym_10_api:
                 observation_space = spaces.Box(low=0, high=100, shape=state.shape, dtype=np.float16)  # for gym>=0.10
             else:
                 observation_space = spaces.Box(low=0, high=100, shape=state.shape)
 
-        elif observation_type == 'Rgbd':
+        elif observation_type == 'rgbd':
             s_high = state
             s_high[:, :, -1] = 100.0  # max_depth
             s_high[:, :, :-1] = 255  # max_rgb
@@ -57,7 +62,7 @@ class Navigation(UnrealCv):
                 observation_space = spaces.Box(low=s_low, high=s_high, dtype=np.float16)  # for gym>=0.10
             else:
                 observation_space = spaces.Box(low=s_low, high=s_high)
-
+        
         return observation_space
 
     def open_door(self):

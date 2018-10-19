@@ -1,5 +1,7 @@
 import gym
+import argparse
 import gym_unrealcv
+from gym_unrealcv.envs.utils import env_unreal
 from distutils.dir_util import copy_tree
 import os
 import json
@@ -10,19 +12,44 @@ import time
 from example.utils import preprocessing, io_util
 
 
-if __name__ == '__main__':
 
-    env = gym.make(ENV_NAME)
+if __name__ == '__main__':
+    #All new code
+    parser = argparse.ArgumentParser(description=None)
+    parser.add_argument("-e", "--env_id", nargs='?', default='Capstone_AIArena-v0',
+                        help='Select the environment to run')
+    parser.add_argument("-r", "--render", default=False, metavar='G', help='show env using cv2')
+    args = parser.parse_args()
+    env = gym.make(args.env_id)
+    #From Random_Agent.py
+    
+    #How many steps we want to take
+    
+    env = env.unwrapped
+    
+    
+    
+    #env = gym.make(ENV_NAME)
+    #print('Environment in run.py : ', env)
+    #While creating the environment there appear to be no variables
     env.rendering = SHOW
-    assert env.action_type == 'continuous'
+    
+    try:
+        print('Action Type : ', env.action_type)
+        assert env.action_type == 'continuous'
+    except AssertionError:
+            print('Action Type Error in run.py')
+    
     ACTION_SIZE = env.action_space.shape[0]
     ACTION_HIGH = env.action_space.high
     ACTION_LOW = env.action_space.low
+    
     INPUT_CHANNELS = env.observation_space.shape[2]
     OBS_HIGH = env.observation_space.high
     OBS_LOW = env.observation_space.low
     OBS_RANGE = OBS_HIGH - OBS_LOW
-
+    MAX_EPOCHS = 200
+    
     process_img = preprocessing.preprocessor(observation_space=env.observation_space, length = 3, size = (INPUT_SIZE,INPUT_SIZE))
 
     #init log file
@@ -60,7 +87,7 @@ if __name__ == '__main__':
 
     try:
         start_time = time.time()
-        for epoch in xrange(current_epoch + 1, MAX_EPOCHS + 1, 1):
+        for epoch in range(current_epoch + 1, MAX_EPOCHS + 1, 1):
             obs = env.reset()
             #observation = io_util.preprocess_img(obs)
             observation = process_img.process_gray(obs,reset=True)
@@ -70,7 +97,7 @@ if __name__ == '__main__':
             #else:
             #    EXPLORE = False
             #    print ("Evaluate Model")
-            for t in xrange(MAX_STEPS_PER_EPOCH):
+            for t in range(MAX_STEPS_PER_EPOCH):
 
                 start_req = time.time()
 
@@ -123,7 +150,7 @@ if __name__ == '__main__':
                         # SAVE SIMULATION DATA
                     if (epoch) % SAVE_INTERVAL_EPOCHS == 0 and TRAIN is True:
                         # save model weights and monitoring data
-                        print 'Save model'
+                        print('Save model')
                         Agent.saveModel( MODEL_DIR + '/ep' +str(epoch))
 
                         copy_tree(MONITOR_DIR + 'tmp', MONITOR_DIR + str(epoch))

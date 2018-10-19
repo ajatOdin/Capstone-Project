@@ -34,7 +34,7 @@ class UnrealCv(object):
         self.img_color = None
         self.img_depth = None
 
-    def init_unrealcv(self, cam_id, resolution=(320, 240)):
+    def init_unrealcv(self, cam_id, resolution=(640, 480)):
         self.client.connect()
         self.check_connection()
         self.client.request('vrun setres {w}x{h}w'.format(w=resolution[0], h=resolution[1]))
@@ -209,8 +209,8 @@ class UnrealCv(object):
 
         location_now = self.get_location(cam_id)
         error = self.get_distance(location_now, location_exp, 2)
-
-        if error < 10:
+      
+        if error < 100:
             return False
         else:
             return True
@@ -292,12 +292,15 @@ class UnrealCv(object):
 
     def get_obj_location(self, obj):
         location = None
+        print('In get_obj_location (unrealcv_basic.py) : ', obj)
         while location is None:
-            location = self.client.request('vget /object/{obj}/location'.format(obj=obj))
+            location = self.client.request('vget /object/{obj}/location'.format(obj=obj))  
+            print(location)
         return [float(i) for i in location.split()]
 
     def get_obj_rotation(self, obj):
         rotation = None
+        print('In get_obj_rotation (unrealcv_basic.py) : ', obj)
         while rotation is None:
             rotation = self.client.request('vget /object/{obj}/rotation'.format(obj=obj))
         return [float(i) for i in rotation.split()]

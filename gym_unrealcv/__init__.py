@@ -8,6 +8,8 @@ def load_env_setting(filename):
     import os
     import gym_unrealcv
     gympath = os.path.dirname(gym_unrealcv.__file__)
+    print('Gym Path is : ', gympath)
+    print('Filename is : ', filename)
     gympath = os.path.join(gympath, 'envs/setting', filename)
     f = open(gympath)
     filetype = os.path.splitext(filename)[1]
@@ -58,7 +60,34 @@ for env in ['RealisticRoom', 'Arch1', 'Arch2']:
                                 },
                         max_episode_steps=200
                     )
+# Shooting / Capstone Activities
+# -------------------------------------------------------------------
 
+#Initially basing this off of Searching
+for env in ['Capstone_AIArena']:
+    setting_file = 'capstone/capstone.json' #.format(env=env)
+    settings = load_env_setting(setting_file)
+    for i, reset in enumerate(['random', 'waypoint', 'testpoint']):
+        for action in ['Discrete', 'Continuous']:  # action type
+            for obs in ['Color', 'Depth', 'Rgbd']:  # observation type
+                for category in settings['targets']:
+                    register(
+                        id='Search{env}{category}-{action}{obs}-v{reset}'.format(env=env, category=category, action=action, obs=obs, reset=i),
+                        entry_point='gym_unrealcv.envs:Capstone_AIArena',
+                        kwargs={'setting_file': 'capstone/capstone.json'.format(env=env),
+                                'category': category,
+                                'reset_type': reset,
+                                'action_type': action,
+                                'observation_type': obs,
+                                'reward_type': 'bbox_distance',  # bbox, distance, bbox_distance
+                                'docker': use_docker,
+                                },
+                        max_episode_steps=200                    
+                    
+                    )
+                    
+                    
+                    
 # Robot Arm
 # ------------------------------------------------------------------
 for action in ['Discrete', 'Continuous']:  # action type
@@ -180,6 +209,19 @@ register(
             'docker': use_docker,
             },
     max_episode_steps=1000
+)    
+register(
+    id='Capstone_AIArena-v0',
+    entry_point='gym_unrealcv.envs:Capstone_AIArena',
+    kwargs={'setting_file': 'capstone/capstone.json',
+            'reset_type': 'static',
+            'action_type': 'continuous',
+            'observation_type': 'color',
+            'reward_type':  'distance',
+            'docker': use_docker,
+            },
+    max_episode_steps=1000    
+    
 )
 register(
     id='Tracking-C-v0',

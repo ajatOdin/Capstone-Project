@@ -1,10 +1,10 @@
 import numpy as np
 import math
-from keras.initializations import normal, identity
+from keras.initializers import normal, identity
 from keras.models import model_from_json, load_model
 #from keras.engine.training import collect_trainable_weights
 from keras.models import Sequential
-from keras.layers import Dense, Flatten, Input, merge, Activation,Convolution2D, MaxPooling2D
+from keras.layers import Dense, Flatten, Input, Concatenate, merge, add, Activation,Convolution2D, MaxPooling2D
 from keras.models import Sequential, Model
 from keras.optimizers import Adam
 import keras.backend as K
@@ -52,7 +52,7 @@ class CriticNetwork(object):
         c6 = MaxPooling2D(pool_size=(2, 2))(c5)
         c7 = Flatten()(c6)
         c8 = Dense(512, activation='relu')(c7)
-        h2 = merge([c8,a1],mode='sum')
+        h2 = add([c8,a1]) #merge([c8,a1],mode='sum')
         h3 = Dense(256, activation='relu')(h2)
         V = Dense(self.action_size,activation='linear')(h3)
         model = Model(input=[S,A],output=V)

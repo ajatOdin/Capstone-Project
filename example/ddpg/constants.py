@@ -1,4 +1,4 @@
-ENV_NAME = 'Search-RrDoorDiscrete-v0'
+ENV_NAME = 'Capstone_AIArena-v0'
 
 CONTINUE = False
 RESTART_EP = 4000

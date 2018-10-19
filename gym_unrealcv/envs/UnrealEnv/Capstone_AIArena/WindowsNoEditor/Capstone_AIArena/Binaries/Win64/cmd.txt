@@ -1,0 +1,3 @@
+cd documents/github/gym-unrealcv/example/random
+
+python random_agent.py -e Capstone_AIArena-v0

@@ -3,9 +3,11 @@ from operator import itemgetter
 import math
 import numpy as np
 class ResetPoint():
-    def __init__(self, setting, type, test, init_pose):
+    def __init__(self, setting, type, init_pose):
         self.reset_type = type
+        #Remove "Test" from __init__ requirements
         #self.testpoints = setting['test_xy']
+        self.reset_type = 'waypoint'
         self.waypoints = []
         self.collisionpoints = []
         self.start_id = 0
@@ -14,6 +16,7 @@ class ResetPoint():
         self.collision_th = setting['collision_th']
         self.height = setting['height']
         self.pitch = setting['pitch']
+        print('Incoming Values Type / Pose : ', self.reset_type, ' : ', init_pose)
         if self.reset_type == 'testpoint':
             for x,y in setting['test_xy']:
                 pose = [x,y,setting['height'],0]
@@ -24,6 +27,7 @@ class ResetPoint():
             self.reset_area = setting['reset_area']
 
     def select_resetpoint(self):
+        current_pose = [0, 0, 0, 0, 0, 0]
         if  'random' in self.reset_type:
             current_pose = self.reset_random()
         elif 'testpoint' in self.reset_type:

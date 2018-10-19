@@ -59,6 +59,7 @@ class RunUnreal():
 
     def read_port(self,bin_path):
         s = bin_path.split('/')
+        
         s[-1] = 'unrealcv.ini'
         delimiter = '/'
         ini_path = delimiter.join(s)

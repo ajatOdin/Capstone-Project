@@ -1,0 +1,17 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "4.17",
+	"Category": "",
+	"Description": "",
+	"Plugins": [
+		{
+			"Name": "FPSWizard",
+			"Enabled": true,
+			"MarketplaceURL": "https://www.unrealengine.com/marketplace/fps-wizard"
+		},
+		{
+			"Name": "UnrealCV",
+			"Enabled": true
+		}
+	]
+}

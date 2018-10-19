@@ -1,0 +1,30 @@
+{
+	"env_name": "Capstone_AIArena",
+	"env_bin": "Capstone_AIArena/WindowsNoEditor/Capstone_AIArena/Binaries/Win64/Capstone_AIArena",
+	"cam_id": 0,
+	"height": 92,
+	"pitch": -30,
+	"maxsteps": 200,
+	"trigger_th": 0.6,
+	"reward_th": 0.1,
+	"reward_factor": 10,
+    "test_xy":[-5050, 200],
+	"collision_th": 50,
+	"waypoint_th": 200,
+	"targets": ["BP_AI_CharSoldier_C_0", "BP_AI_CharSoldier_C_1", "BP_AI_CharSoldier_C_2", "BP_AI_CharSoldier_C_3", "BP_AI_CharSoldier_C_4", "BP_AI_CharSoldier_C_6", "BP_AI_CharSoldier_C_7", "BP_AI_CharSoldier_C_8", "BP_AI_CharSoldier_C_9", "BP_AI_CharSoldier_C_10", "BP_AI_CharSoldier_C_14"
+               
+               ],
+	"reset_area":[-5050, 200, 100, 250, 80, 180],
+	"discrete_actions": [
+		[50,   0, 0],
+		[30,  15, 0],
+		[30, -15, 0],
+		[15,  30, 0],
+		[15, -30, 0],
+		[0,    0, 1]
+	],
+	"continous_actions": {
+		"high": [100, 45, 1],
+		"low":  [0, -45, 0]
+	}
+}
