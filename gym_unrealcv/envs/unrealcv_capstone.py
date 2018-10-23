@@ -27,7 +27,7 @@ class Capstone_AIArena(gym.Env):
                  augment_env=None,  # texture, target, light
                  action_type='continuous',  # 'Discrete', 'Continuous'
                  observation_type='color',  # 'color', 'depth', 'rgbd'
-                 reward_type='bbox',  # distance, bbox, bbox_distance,
+                 reward_type='distance',  # distance, bbox, bbox_distance,
                  docker=False,
                  resolution=(640, 480)
                  ):
@@ -136,13 +136,38 @@ class Capstone_AIArena(gym.Env):
             (velocity, angle, info['Trigger']) = action
         self.count_steps += 1
         info['Done'] = False
+        #take action
+        #aiming aspect
+        
+        # Action Needs to refer to :
+        #QAdjust Statespace in Settings.json
 
+        # Pitch and Yaw for aiming
+        # Movement (Forward, Back, Left, Right)
+        # Firing Weapon (should this equal a trigger or no?)
+        #Do we even need a trigger? Or should we return health / ammo as a stat? How to return through UnrealCV
+        #Part of the question is what does a trigger threshold equal?
+        #Reward function for first iteration should focus on minimal movement, aiming towards targets, and firing and hitting targets
+        #Three different reward functions
+        # 1. Aim and shoot + Highlight? Also need friendly bots in (blue) named different in Unreal to account for FF
+        #   Closer a rotation is to enemy higher minute reward, firing gets points for kills, highlighting Good for small bit
+        # 3. Move and engage enemies
+        # Constant movement is a reward, killed enemies are large reward
+        # 4. Highlight seen enemies for team
+        # 5. Fight!!!
+        #Question is whether to punish AI for missed shots (may dissuade from shooting)
+
+        #Second is being able to save our state space and reupload it
+        
+        print('Trigger_TH is : ', self.trigger_th, 'Trigger Response is : ', info['Trigger'])
+        
         # take action
         info['Collision'] = self.unrealcv.move_2d(self.cam_id, angle, velocity)
         info['Pose'] = self.unrealcv.get_pose(self.cam_id, 'soft')
         # the robot think that it found the target object,the episode is done
         # and get a reward by bounding box size
         # only three times false trigger allowed in every episode
+        
         if info['Trigger'] > self.trigger_th:
             self.trigger_count += 1
             # get reward

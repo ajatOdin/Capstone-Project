@@ -193,8 +193,8 @@ class UnrealCv(object):
         cmd = 'vset /camera/{cam_id}/moveto {x} {y} {z}'
         self.client.request(cmd.format(cam_id=cam_id, x=loc[0], y=loc[1], z=loc[2]))
 
-    def move_2d(self, cam_id, angle, length, height=0, pitch=0):
-
+    def move_2d(self, cam_id, xaxis, yxis, height=0, pitch=0):
+        '''
         yaw_exp = (self.cam[cam_id]['rotation'][1] + angle) % 360
         pitch_exp = (self.cam[cam_id]['rotation'][2] + pitch) % 360
         delt_x = length * math.cos(yaw_exp / 180.0 * math.pi)
@@ -214,7 +214,30 @@ class UnrealCv(object):
             return False
         else:
             return True
-
+        '''
+        location_now = self.cam[cam_id]['location']
+        #How to return "collision" effects as a result of not moving, also to account for distance vert
+        cmd = 'vset /action/keyboard W {extime}'
+        
+        
+    def look_3d(self, cam_id, yaw, pitch):
+        cmdYaw = 'vexec BP_CharacterBase_C_0 UCVYaw {yaw}'
+        return self.client.request(cmd.format(yaw=yaw))
+        cmdPitch = 'vexec BP_CharacterBase_C_0 UCVPitch {pitch}'
+        return self.client.request(cmd.format(pitch=pitch))
+    
+    
+        
+        
+        
+    def fire_weap(self, time):
+        extime = time * 0.1
+        cmd = 'vset /action/keyboard LeftMouseButton {extime}'
+        return self.client.request(cmd.format(extime=extime))
+        
+        
+        
+        
     def get_distance(self, pos_now, pos_exp, n=2):
         error = np.array(pos_now[:n]) - np.array(pos_exp[:n])
         distance = np.linalg.norm(error)

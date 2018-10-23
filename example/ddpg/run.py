@@ -22,7 +22,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     env = gym.make(args.env_id)
     #From Random_Agent.py
-    
+    #How to load models
     #How many steps we want to take
     
     env = env.unwrapped
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         os.makedirs(MODEL_DIR)
     if not os.path.exists(PARAM_DIR):
         os.makedirs(PARAM_DIR)
-
+    print('Model Directory : ', MODEL_DIR)
     Agent = DDPG(ACTION_SIZE, MEMORY_SIZE, GAMMA,
                  LEARNINGRATE_CRITIC, LEARNINGRATE_ACTOR, TARGET_UPDATE_RATE,
                  INPUT_SIZE, INPUT_SIZE, 3)

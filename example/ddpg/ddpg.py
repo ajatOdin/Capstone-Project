@@ -90,7 +90,7 @@ class DDPG:
         self.memory.addMemory(state, action, reward, newState, isFinal)
 
     def saveMemory(self,state,  action, reward, newState, isFinal ):
-        with open('/home/UAV/dqn_data/memory.npy', 'a') as f:
+        with open('/example/utils/memory.npy', 'a') as f:
             #f.writelines(str(state)+'\n')
             np.save(f, state)
 
@@ -132,6 +132,7 @@ class DDPG:
         #self.updateTargetNetwork(self.actor.model, self.actor.target_model, self.target_update_rate)
 
     def saveModel(self, path):
+        print('Model is being saved')
         self.critic.model.save_weights(path+'Critic_model.h5')
         self.actor.model.save_weights(path+'Actor_model.h5')
 
