@@ -193,8 +193,8 @@ class UnrealCv(object):
         cmd = 'vset /camera/{cam_id}/moveto {x} {y} {z}'
         self.client.request(cmd.format(cam_id=cam_id, x=loc[0], y=loc[1], z=loc[2]))
 
-    def move_2d(self, cam_id, xaxis, yxis, height=0, pitch=0):
-        '''
+    def move_2d(self, cam_id, length, angle, height=0, pitch=0):
+        
         yaw_exp = (self.cam[cam_id]['rotation'][1] + angle) % 360
         pitch_exp = (self.cam[cam_id]['rotation'][2] + pitch) % 360
         delt_x = length * math.cos(yaw_exp / 180.0 * math.pi)
@@ -214,23 +214,60 @@ class UnrealCv(object):
             return False
         else:
             return True
-        '''
-        location_now = self.cam[cam_id]['location']
+        
+        
+        
+    def move_character(self, cam_id, xaxis, yaxis):
+        location_start = self.cam[cam_id]['location']
         #How to return "collision" effects as a result of not moving, also to account for distance vert
-        cmd = 'vset /action/keyboard W {extime}'
+        #XAxis (Walk forward and backward) handler
+        retX = False
+        retY = False
+        if xaxis > 0:
+            keyX = 'W'
+        else:
+            keyX = 'S'
+            xaxis = xaxis*-1
+        cmd = 'vset /action/keyboard {xkey} {extime}'
+        self.client.request(cmd.format(xkey=keyX, extime=xaxis))
+        location_now = self.cam[cam_id]['location']
+        distX = self.get_distance(location_start, location_now, 2)
+        if dist < 10:
+            retX = True
+            
+        #YAxis (strafe left and right) handler
+        if yaxis > 0:
+            keyY = 'D'
+        else:
+            keyY = 'A'
+            yaxis = yaxis*-1
+        cmd = 'vset /action/keyboard {ykey} {extime}'
+        self.client.request(cmd.format(ykey=keyY, extime=yaxis))
+        location_now = self.cam[cam_id]['location']
+        dist = self.get_distance(location_start, location_now, 2)
+        if dist < 10:
+            retY = True
+        
+        return(retY or retX)
         
         
     def look_3d(self, cam_id, yaw, pitch):
         cmdYaw = 'vexec BP_CharacterBase_C_0 UCVYaw {yaw}'
-        return self.client.request(cmd.format(yaw=yaw))
+        ySucc = self.client.request(cmd.format(yaw=yaw))
         cmdPitch = 'vexec BP_CharacterBase_C_0 UCVPitch {pitch}'
-        return self.client.request(cmd.format(pitch=pitch))
+        pSucc = self.client.request(cmd.format(pitch=pitch))
+        if (ySucc & pSucc):
+            return True
+        else:
+            return False
+            
     
     
         
         
         
     def fire_weap(self, time):
+        
         extime = time * 0.1
         cmd = 'vset /action/keyboard LeftMouseButton {extime}'
         return self.client.request(cmd.format(extime=extime))

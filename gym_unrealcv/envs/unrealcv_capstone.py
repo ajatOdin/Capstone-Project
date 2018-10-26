@@ -90,7 +90,9 @@ class Capstone_AIArena(gym.Env):
         
         
         # define reward type
-        # distance, bbox, bbox_distance,
+        #this needs to be replaced with the evolutionary reward function
+        #transitioning rewards from look aim to movement, to communication
+        # distance, bbox, bbox_distance, look aim
         self.reward_type = reward_type
         self.reward_function = reward.Reward(setting)
 
@@ -126,6 +128,8 @@ class Capstone_AIArena(gym.Env):
             Depth=None,
         )
         
+        fire_threshold = 0.4
+        
         action = np.squeeze(action)
         if self.action_type == 'discrete':
             print('action : ', action)
@@ -133,7 +137,8 @@ class Capstone_AIArena(gym.Env):
             print('Trigger 1', info['Trigger'])
             (velocity, angle, info['Trigger']) = self.discrete_actions[action]
         else:
-            (velocity, angle, info['Trigger']) = action
+            (pitch, yaw, x2d, y2d, fire) = action
+            #(velocity, angle, info['Trigger']) = action
         self.count_steps += 1
         info['Done'] = False
         #take action
@@ -162,12 +167,27 @@ class Capstone_AIArena(gym.Env):
         print('Trigger_TH is : ', self.trigger_th, 'Trigger Response is : ', info['Trigger'])
         
         # take action
-        info['Collision'] = self.unrealcv.move_2d(self.cam_id, angle, velocity)
-        info['Pose'] = self.unrealcv.get_pose(self.cam_id, 'soft')
+        if self.action_type == 'discrete':
+            #Handle Collision Detection
+            info['Collision'] = self.unrealcv.move_2d(self.cam_id, angle, velocity)
+            info['Pose'] = self.unrealcv.get_pose(self.cam_id, 'soft')
+        else:
+            #All of our continuous state/action space goes here
+            info['Collision'] = move_character(self, cam_id, x2d, y2d):
+            lookSuccess = look_3d(self.cam_id, yaw, pitch)
+            if (fire > fire_threshold):
+                fireSuccess = fire_weap(fire)
+            
+            
+            
+            
+            #info['Collision'] = self.unrealcv.move_2d(self.cam_id, angle, velocity)
         # the robot think that it found the target object,the episode is done
         # and get a reward by bounding box size
         # only three times false trigger allowed in every episode
+        #Reward Calls below:
         
+        '''
         if info['Trigger'] > self.trigger_th:
             self.trigger_count += 1
             # get reward
@@ -182,6 +202,7 @@ class Capstone_AIArena(gym.Env):
                 info['Done'] = True
                 if info['Reward'] > 0 and self.reset_type == 'waypoint':
                     self.reset_module.success_waypoint(self.count_steps)
+           
         else:
             # get reward
             distance, self.target_id = self.select_target_by_distance(info['Pose'][:3], self.targets_pos)
@@ -200,7 +221,10 @@ class Capstone_AIArena(gym.Env):
                 info['Done'] = True
                 if self.reset_type == 'waypoint':
                     self.reset_module.update_dis2collision(info['Pose'])
-
+        '''
+        
+        
+        
         # update observation
         state = self.unrealcv.get_observation(self.cam_id, self.observation_type)
         info['Color'] = self.unrealcv.img_color
