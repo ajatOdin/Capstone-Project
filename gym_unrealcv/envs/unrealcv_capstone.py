@@ -40,7 +40,9 @@ class Capstone_AIArena(gym.Env):
         self.pitch = setting['pitch']
         self.discrete_actions = setting['discrete_actions']
         self.continous_actions = setting['continous_actions']
-
+        
+        self.currentTargets = 0
+        
         self.docker = docker
         self.reset_type = reset_type
         self.augment_env = augment_env
@@ -102,11 +104,11 @@ class Capstone_AIArena(gym.Env):
       
         current_pose[2] = self.height
         self.unrealcv.set_location(self.cam_id, current_pose[:3])
-
+        
         self.count_steps = 0
 
         self.targets_pos = self.unrealcv.build_pose_dic(self.target_list)
-
+        self.currentTargets = len(self.target_list)
         # for reset point generation and selection
         self.reset_module = reset_point.ResetPoint(setting, reset_type, current_pose)
 
@@ -178,7 +180,9 @@ class Capstone_AIArena(gym.Env):
             if (fire > fire_threshold):
                 fireSuccess = fire_weap(fire)
             
-            
+        #Functions are built for shot reward. Need to include functions calls here and handle the trigger thing
+        
+        
             
             
             #info['Collision'] = self.unrealcv.move_2d(self.cam_id, angle, velocity)
@@ -272,7 +276,19 @@ class Capstone_AIArena(gym.Env):
         if close==True:
             self.unreal.close()
         return self.unrealcv.img_color
-
+    def check_targets(self):
+        targetNum = len(self.target_list)
+        missingObj = 0
+        foundObj = 0
+        objs = self.unrealcv.get_objects()
+        for target in self.target_list:
+            if target in objs:
+                foundObj+=1
+            else:
+                missingObj+=1
+        print([foundObj, missingObj])
+        return([foundObj, missingObj])
+        
     def _close(self):
         self.unreal.close()
 

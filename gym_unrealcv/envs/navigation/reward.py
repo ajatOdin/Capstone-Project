@@ -11,7 +11,7 @@ class Reward():
     def angle_between(v1, v2):
     """Finds angle between two vectors"""
         v1_u = unit_vector(v1)
-        v2_u = unit_vector(v2)
+        v2_u = unit_vector(v2)        
     return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
     
     def lookaim(self, selfposition, objects):
@@ -26,6 +26,19 @@ class Reward():
             print('AgentRot is : ', agentRot)
         
         return reward
+    def fireat(self, selfposition, changeInObjects):
+        AimSum = 0
+        reward = 0
+        if changeInObjects>0:
+            reward+=changeInObjects*5
+        agentRot = get_rotation(self, 0)
+        for obj in objects:
+            #Need to count the objects and compare with a known start object count. 
+            #Compare needed vector with current vect0r, interpolate reward from that
+            npRot = angle_between(selfposition, unrealcv.get_obj_location(obj))
+            print('Rotation in lookAim is : ', npRot)
+            print('AgentRot is : ', agentRot)
+        
         
     def reward_bbox(self, boxes):
         reward = 0

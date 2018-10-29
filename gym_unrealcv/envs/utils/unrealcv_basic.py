@@ -250,7 +250,7 @@ class UnrealCv(object):
         
         return(retY or retX)
         
-        
+     
     def look_3d(self, cam_id, yaw, pitch):
         cmdYaw = 'vexec BP_CharacterBase_C_0 UCVYaw {yaw}'
         ySucc = self.client.request(cmd.format(yaw=yaw))
@@ -263,8 +263,10 @@ class UnrealCv(object):
             
     
     
-        
-        
+    def get_objects(self):
+        res = self.client.request('vget /objects')
+        object_names = res.split(' ')
+        return object_names
         
     def fire_weap(self, time):
         
