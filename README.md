@@ -16,7 +16,7 @@ This project relies heavily on the hard work and dedication of the teams behind 
 ## Working Log
 
 
-
+Active training can be viewed at : https://www.twitch.tv/ajatodin
 
 
 
